@@ -2,15 +2,21 @@
 
 MCP (Model Context Protocol) server for **Camunda 7 REST API**. Enables AI assistants like Claude to interact with Camunda 7 process engines — managing process definitions, instances, tasks, history, deployments, incidents, and more.
 
-## Installation
+## Quick Start
+
+### Claude Code (CLI)
 
 ```bash
-npx mcp-camunda7
+claude mcp add camunda7-server -s user \
+  -e CAMUNDA_BASE_URL=http://localhost:8080/engine-rest \
+  -e CAMUNDA_USERNAME=demo \
+  -e CAMUNDA_PASSWORD=demo \
+  -- npx mcp-camunda7
 ```
 
-### Claude Code / Claude Desktop
+### Claude Desktop / JSON config
 
-Add to your MCP configuration (`.mcp.json` or Claude Desktop settings):
+Add to your MCP configuration (`.mcp.json`, `claude_desktop_config.json`, or `settings.json`):
 
 ```json
 {
@@ -28,13 +34,19 @@ Add to your MCP configuration (`.mcp.json` or Claude Desktop settings):
 }
 ```
 
+### Global install (alternative)
+
+```bash
+npm install -g mcp-camunda7
+```
+
 ## Environment Variables
 
 | Variable | Required | Description |
 |---|---|---|
 | `CAMUNDA_BASE_URL` | Yes | Camunda 7 REST API base URL (e.g. `http://localhost:8080/engine-rest`) |
-| `CAMUNDA_USERNAME` | Yes | Username for Basic Auth |
-| `CAMUNDA_PASSWORD` | Yes | Password for Basic Auth |
+| `CAMUNDA_USERNAME` | No | Username for Basic Auth |
+| `CAMUNDA_PASSWORD` | No | Password for Basic Auth |
 
 ## Available Tools (23)
 
@@ -75,6 +87,27 @@ Add to your MCP configuration (`.mcp.json` or Claude Desktop settings):
 ### Engine
 - **get_engine_info** — Retrieve engine name and version
 
+## Usage Examples
+
+Once installed, you can ask Claude things like:
+
+- *"List all deployed process definitions"*
+- *"Show me running instances of the invoice process"*
+- *"What tasks are assigned to user john?"*
+- *"Complete task X with variable approved=true"*
+- *"Show the BPMN XML for process definition invoice"*
+- *"Are there any incidents in the engine?"*
+- *"Deploy this BPMN file to Camunda"*
+- *"Show the history of completed process instances from the last 7 days"*
+
+## How It Works
+
+This MCP server acts as a bridge between AI assistants (via the Model Context Protocol) and the Camunda 7 REST API. It translates natural language requests into REST API calls, allowing you to manage your BPM engine conversationally.
+
+```
+Claude / AI Assistant  <-->  MCP Protocol  <-->  mcp-camunda7  <-->  Camunda 7 REST API
+```
+
 ## Development
 
 ```bash
@@ -82,7 +115,12 @@ git clone https://github.com/eduardotsilva/mcp-camunda7.git
 cd mcp-camunda7
 npm install
 npm run build
+npm start
 ```
+
+## Contributing
+
+Contributions are welcome! Feel free to open issues or submit pull requests.
 
 ## License
 

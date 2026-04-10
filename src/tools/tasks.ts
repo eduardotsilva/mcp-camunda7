@@ -17,8 +17,19 @@ export function register(server: McpServer, client: CamundaClient) {
       maxResults: z.number().max(200).optional().default(50),
       firstResult: z.number().optional().default(0),
     },
-    async (params) => {
-      const result = await client.get("/task", params);
+    async ({ assignee, candidateGroup, processDefinitionKey, processInstanceId, name, nameLike, maxResults, firstResult }) => {
+      const body: Record<string, unknown> = {};
+      if (assignee !== undefined) body.assignee = assignee;
+      if (candidateGroup !== undefined) body.candidateGroup = candidateGroup;
+      if (processDefinitionKey !== undefined) body.processDefinitionKey = processDefinitionKey;
+      if (processInstanceId !== undefined) body.processInstanceId = processInstanceId;
+      if (name !== undefined) body.name = name;
+      if (nameLike !== undefined) body.nameLike = nameLike;
+
+      const result = await client.post(
+        `/task?firstResult=${firstResult}&maxResults=${maxResults}`,
+        body
+      );
       return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
     }
   );

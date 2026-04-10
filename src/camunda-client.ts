@@ -14,6 +14,13 @@ export class CamundaClient {
     this.baseUrl = baseUrl.replace(/\/+$/, "");
     this.authHeader =
       "Basic " + Buffer.from(`${username}:${password}`).toString("base64");
+
+    process.stderr.write(`[mcp-camunda7] Connected to: ${this.baseUrl}\n`);
+    process.stderr.write(`[mcp-camunda7] User: ${username}\n`);
+  }
+
+  getBaseUrl(): string {
+    return this.baseUrl;
   }
 
   private buildUrl(path: string, params?: Record<string, unknown>): string {

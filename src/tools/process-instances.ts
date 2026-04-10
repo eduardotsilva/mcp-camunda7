@@ -14,8 +14,17 @@ export function register(server: McpServer, client: CamundaClient) {
       maxResults: z.number().max(200).optional().default(50),
       firstResult: z.number().optional().default(0),
     },
-    async (params) => {
-      const result = await client.get("/process-instance", params);
+    async ({ processDefinitionKey, businessKey, active, suspended, maxResults, firstResult }) => {
+      const body: Record<string, unknown> = {};
+      if (processDefinitionKey !== undefined) body.processDefinitionKey = processDefinitionKey;
+      if (businessKey !== undefined) body.businessKey = businessKey;
+      if (active !== undefined) body.active = active;
+      if (suspended !== undefined) body.suspended = suspended;
+
+      const result = await client.post(
+        `/process-instance?firstResult=${firstResult}&maxResults=${maxResults}`,
+        body
+      );
       return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
     }
   );
